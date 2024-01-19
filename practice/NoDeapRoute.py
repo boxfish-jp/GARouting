@@ -2,11 +2,11 @@ import random
 import copy
 
 genLen = 15  # 経路の長さ
-AreaSize = [3, 3]
-GoalPos = [2, 2]
+AreaSize = [5, 5]
+GoalPos = [4, 4]
 start = [0, 0]
-NGEN = 10  # 世代数
-POP = 8  # 集団の数
+NGEN = 30  # 世代数
+POP = 1000  # 集団の数
 
 
 # 現在位置の計算
@@ -55,19 +55,14 @@ def makeIndividual():
 # 経路の評価関数
 def evalRoute(individual: list[list[int]]):
     cleanIndividual: list[list[int]] = []  # 到達後のノードを削除した経路
-    nearest = GoalPos[0] + GoalPos[1]
     for i in range(0, len(individual)):
         cleanIndividual.append(individual[i])
         if individual[i] == GoalPos:
             return (i, cleanIndividual)
 
-        distance = abs(individual[i][0] - GoalPos[0]) + abs(
-            individual[i][1] - GoalPos[1]
-        )
-        if distance < nearest:
-            nearest = distance
-
-    return (nearest * genLen * 10, cleanIndividual)
+    lastNode = cleanIndividual[len(cleanIndividual) - 1]
+    cost = abs(GoalPos[0] - lastNode[0]) + abs(GoalPos[1] - lastNode[1])
+    return (cost * len(cleanIndividual) * 10, cleanIndividual)
 
 
 # 初期世代の生成
@@ -100,31 +95,34 @@ def select_roulette(population):
     """
     sortArray = sorted(population, key=lambda x: evalRoute(x)[1])
     # sortArrayを半分に分ける
-    mid = len(sortArray) // 2
-    first_half = sortArray[:mid]
-    second_half = sortArray[mid:]
+    quote = len(sortArray) // 4
+    first_quote = sortArray[:quote]
+    second_quote = sortArray[quote : quote * 2]
+    third_quote = sortArray[quote * 2 : quote * 3]
+    forth_quote = sortArray[quote * 3 :]
 
     # それぞれランダムに並び替える
-    random.shuffle(first_half)
-    random.shuffle(second_half)
+    random.shuffle(first_quote)
+    random.shuffle(second_quote)
+    random.shuffle(third_quote)
+    random.shuffle(forth_quote)
 
     # 2つの配列を結合する
-    result = first_half + second_half
+    result = first_quote + second_quote + third_quote + forth_quote
     return result
 
 
 # ノードが重複または、ノードが隣接しているかを確認する
 def checkNearBy(individual1: list[list[int]], individual2: list[list[int]]):
-    for i in range(1, len(individual1) - 1):
-        for j in range(1, len(individual2) - 1):
+    for ind in range(len(individual1) // 2):
+        i = random.randint(len(individual1) // 4, len(individual1) // 4 * 3)
+        for j in range(len(individual2) // 4, len(individual2) // 4 * 3):
             if individual1[i] == individual2[j]:
+                # print(individual1[i])
                 return individual1[i]
 
-    for i in range(2, len(individual1) - 2):
-        for j in range(2, len(individual2) - 2):
             if individual1[i] == individual2[j] or individual1[i] == individual2[j]:
                 return (individual1[i], individual1[i])
-
     return False
 
 
@@ -135,10 +133,12 @@ def crossover(individualM: list[list[int]], individualD: list[list[int]]):
     if checker == False:
         return False
     elif type(checker) == list:
-        print("m:\n", individualM)
-        print("d\n", individualD)
+        # print("m:\n", individualM)
+        # print("d\n", individualD)
         indexM = individualM.index(checker)
         indexD = individualD.index(checker)
+        # print("indexM", indexM)
+        # print("indexD", indexD)
         chilid1 = evalRoute(individualM[:indexM] + individualD[indexD:])[1]
         chilid2 = evalRoute(individualD[:indexD] + individualM[indexM:])[1]
         return (chilid1, chilid2)
@@ -165,8 +165,10 @@ def MakeSmartChildren(selected: list, length: int):
             if child != False:
                 # print("j", j)
                 # print("k", k)
-                children.append(child[0])
-                children.append(child[1])
+                if child[0] not in children:
+                    children.append(child[0])
+                if child[1] not in children:
+                    children.append(child[1])
 
             if len(children) >= length:
                 # print("children", len(children))
@@ -187,8 +189,10 @@ def MakeChildren(selected: list, length: int, rest: int):
                 continue
             child = crossover(selected[j], selected[k])
             if child != False:
-                children.append(child[0])
-                children.append(child[1])
+                if child[0] not in children:
+                    children.append(child[0])
+                if child[1] not in children:
+                    children.append(child[1])
 
             if len(children) >= rest:
                 return children.copy()
@@ -232,8 +236,8 @@ def main():
 
         population = copy.deepcopy(children)
         # print("len", len(population))
-        for popu in population:
-            print("1:", popu)
+        # for popu in population:
+        # print("1:", popu)
 
         print("children", len(children))
         printBest(population)
