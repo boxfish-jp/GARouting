@@ -1,6 +1,6 @@
-import json
 import itertools
 import time
+from pickMatrix import pickMatrix
 
 start_time = time.time()  # 開始時間
 # 0~4の値が入った配列
@@ -13,15 +13,15 @@ permutations = list(itertools.permutations(array))
 for perm in permutations:
     print(perm)
 
-with open("C:/Users/boxfi/OneDrive/デスクトップ/GARouting/conf5.json", "r") as tsp_data:
-    tsp = json.load(tsp_data)
+pick = [0, 1, 2, 3, 4, 19]
 
-
-distance_map = tsp["DistanceMatrix"]
-confusion_map = tsp["confusionMatrix"]
-init_distance_map = tsp["initDistance"]
-init_confusion_map = tsp["initConfusion"]
-IND_SIZE = tsp["TourSize"]
+maps = pickMatrix(pick)
+init_distance_map = maps["initDistance"]
+init_confusion_map = maps["initConfusion"]
+distance_map = maps["DistanceMatrix"]
+confusion_map = maps["confusionMatrix"]
+rankCity = maps["rankCity"]
+print(maps)
 
 
 def evalTSP(individual):
@@ -49,6 +49,8 @@ for cost in result:
         index = i
     i += 1
 
-print("最小値は" + str(min) + "で、その時の順番は" + str(permutations[index]))
+print("最小値は" + str(min) + "で、その時の順番は" + str(permutations[index]), end="")
+for i in permutations[index]:
+    print(" -> " + rankCity[pick[i + 1]], end="")
 end_time = time.time()  # 終了時間
 print("Execution time: ", end_time - start_time, "seconds")  # 実行時間の表示

@@ -4,6 +4,7 @@ import json
 import matplotlib.pyplot as plt
 import numpy
 import time
+from pickMatrix import pickMatrix
 
 from deap import algorithms
 from deap import base
@@ -13,15 +14,16 @@ from deap import tools
 # gr*.json contains the distance map in list of list style in JSON format
 # Optimal solutions are : gr17 = 2085, gr24 = 1272, gr120 = 6942
 
-with open("C:/Users/boxfi/OneDrive/デスクトップ/GARouting/conf5.json", "r") as tsp_data:
-    tsp = json.load(tsp_data)
+pick = [0, 1, 2, 3, 4, 19]
 
-
-distance_map = tsp["DistanceMatrix"]
-confusion_map = tsp["confusionMatrix"]
-init_distance_map = tsp["initDistance"]
-init_confusion_map = tsp["initConfusion"]
-IND_SIZE = tsp["TourSize"]
+maps = pickMatrix(pick)
+init_distance_map = maps["initDistance"]
+init_confusion_map = maps["initConfusion"]
+distance_map = maps["DistanceMatrix"]
+confusion_map = maps["confusionMatrix"]
+rankCity = maps["rankCity"]
+print(maps)
+IND_SIZE = len(pick) - 1
 
 # 問題の最適化のための型定義
 # 最小化問題として定義
