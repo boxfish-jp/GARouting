@@ -12,7 +12,9 @@ from deap import tools
 # gr*.json contains the distance map in list of list style in JSON format
 # Optimal solutions are : gr17 = 2085, gr24 = 1272, gr120 = 6942
 
-with open("C:/Users/boxfi/OneDrive/デスクトップ/GARouting/conf17.json", "r") as tsp_data:
+with open(
+    "C:/Users/boxfi/OneDrive/デスクトップ/GARouting/works/conf17.json", "r"
+) as tsp_data:
     tsp = json.load(tsp_data)
 
 

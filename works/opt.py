@@ -33,7 +33,9 @@ def tsp_dynamic_programming(distances):
     return min_cost
 
 
-with open("C:/Users/boxfi/OneDrive/デスクトップ/GARouting/conf17.json", "r") as tsp_data:
+with open(
+    "C:/Users/boxfi/OneDrive/デスクトップ/GARouting/works/conf17.json", "r"
+) as tsp_data:
     tsp = json.load(tsp_data)
 
 

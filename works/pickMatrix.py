@@ -3,7 +3,9 @@ import json
 
 def pickMatrix(pick):
     with open(
-        "C:/Users/boxfi/OneDrive/デスクトップ/GARouting/conf.json", encoding="utf-8", mode="r"
+        "C:/Users/boxfi/OneDrive/デスクトップ/GARouting/works/conf.json",
+        encoding="utf-8",
+        mode="r",
     ) as tsp_data:
         tsp = json.load(tsp_data)
 
