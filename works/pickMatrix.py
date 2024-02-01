@@ -5,7 +5,7 @@ from pathlib import Path
 def pickMatrix(pick):
     parent = Path(__file__).parent.resolve().parent
     with open(
-        parent.joinpath("works\conf.json"),
+        parent.joinpath("works/conf.json"),
         encoding="utf-8",
         mode="r",
     ) as tsp_data:
