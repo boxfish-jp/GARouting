@@ -4,7 +4,7 @@ import json
 import matplotlib.pyplot as plt
 import numpy
 import time
-from pickMatrix import pickMatrix
+from .pickMatrix import pickMatrix
 
 from deap import algorithms
 from deap import base
@@ -22,7 +22,6 @@ init_confusion_map = maps["initConfusion"]
 distance_map = maps["DistanceMatrix"]
 confusion_map = maps["confusionMatrix"]
 rankCity = maps["rankCity"]
-print(maps)
 IND_SIZE = len(pick) - 1
 
 # 問題の最適化のための型定義
@@ -96,7 +95,9 @@ def main():
     """
     end_time = time.time()  # 終了時間
     print("Execution time: ", end_time - start_time, "seconds")  # 実行時間の表示
-    return pop, stats, hof
+    best_individual = hof[0]
+    print("Best individual is ", best_individual)
+    return {"pop": pop, "stats": stats, "hof": hof}
 
 
 if __name__ == "__main__":
